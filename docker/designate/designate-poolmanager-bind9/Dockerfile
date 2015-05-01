@@ -8,7 +8,6 @@ RUN yum install -y bind && \
 	cp -pr /var/named /opt/kolla/var-named
 
 ADD start-named.sh /opt/kolla/
-#ADD start-designate-central.sh /opt/kolla/
 ADD start-designate-pool-manager.sh /opt/kolla/
 
 RUN mkdir -p /var/log/supervisor/
