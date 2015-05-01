@@ -1,0 +1,35 @@
+#!/bin/bash
+D_API=compose_designateapi_1
+D_CENTRAL=compose_designatecentral_1
+D_MDNS=compose_designatemdns_1
+D_PM=compose_designatepoolmanagerbind9_1
+D_PM_D=compose_designatepoolmanagerbind9data_1
+
+echo Cleanup...
+docker rm -f $(docker ps -a|grep designate|cut -d ' ' -f1 )
+docker rmi $(docker images|grep designate|tr -s ' ' ','|cut -d, -f3)
+mysql -h 172.16.1.91 -uroot -pkolla -e 'drop database designate'
+
+if [ "$1" == "clean" ]
+then
+	exit
+fi
+
+echo Building...
+sh designate-base/build
+sh designate-api/build
+sh designate-central/build
+sh designate-mdns/build
+sh designate-poolmanager-bind9/build
+sh designate-poolmanager-bind9-data/build
+
+echo Run...
+docker-compose -f ../../compose/designate.yml up -d
+
+echo Wait...
+for c in $D_API $D_CENTRAL $D_MDNS $D_PM $D_PM_D
+do
+	sleep 5
+	docker logs $c
+done
+

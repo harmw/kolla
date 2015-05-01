@@ -1,0 +1,6 @@
+designate server-create --name ns.kolla.local.
+id=$(designate domain-create --name kollacloud.local. --ttl $((15*60)) --description "cloudy domain" --email hostmaster@kollacloud.local | awk '/ id / {print $4}')
+designate record-create --name welcome.kollacloud.local. --type TXT --data "Kolla rules the cloud!" $id
+designate record-create --name localhost.kollacloud.local. --type A --data 127.0.0.1 $id
+
+host welcome.kollacloud.local. 172.16.1.91 
