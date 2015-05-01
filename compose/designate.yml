@@ -1,0 +1,56 @@
+# The DNSaaS REST api from where zones and records are added or removed.
+designateapi:
+  image: kollaglue/centos-rdo-designate-api:90ae33a
+  name: designate-api
+  net: "host"
+  restart: always
+  env_file:
+   - openstack.env
+
+# The central dispatchers that stores data in a database and pushes requests
+# down to pool-manager.
+designatecentral:
+  image: kollaglue/centos-rdo-designate-central:90ae33a
+  name: designate-central
+  net: "host"
+  restart: always
+  env_file:
+   - openstack.env
+
+# The pool-manager with a bind9 backend. This is state storage.
+designatepoolmanagerbind9data:
+  image: kollaglue/centos-rdo-designate-poolmanager-bind9-data:90ae33a
+  name: designate-poolmanager-bind9data
+  restart: on-failure
+
+# The actual pool-manager and named processes run here. Bind will be running
+# slave for alle Designate managed zones.
+designatepoolmanagerbind9:
+  image: kollaglue/centos-rdo-designate-poolmanager-bind9:90ae33a
+  name: designate-poolmanager-bind9
+  net: "host"
+  restart: always
+  env_file:
+    - openstack.env
+  volumes_from:
+    - designatepoolmanagerbind9data
+
+# The MDNS service acts as the primary (or master) nameserver and uses
+# AXFR/IXFR commands to instruct the nameserver, in our case bind9.
+designatemdns:
+  image: kollaglue/centos-rdo-designate-mdns:90ae33a
+  name: designate-mdns
+  net: "host"
+  restart: always
+  env_file:
+   - openstack.env
+
+# Sink listens for events from Nova and Neutron and configures
+# IP-records if required.
+#designatesink:
+#  image: kollaglue/centos-rdo-designate-sink:90ae33a
+#  name: designate-sink
+#  net: "host"
+#  restart: always
+#  env_file:
+#    - openstack.env
