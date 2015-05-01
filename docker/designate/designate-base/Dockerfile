@@ -13,7 +13,7 @@ RUN curl -k -L -o /tmp/designate.tar.gz https://launchpad.net/designate/kilo/201
 	cp etc/designate/designate.conf.sample /etc/designate/designate.conf && \
 	cp etc/designate/api-paste.ini /etc/designate/api-paste.ini && \
 	cp etc/designate/policy.json /etc/designate/policy.json && \
-	cp etc/designate/rootwrap.conf.sample /etc/designate/rootwrap.conf
+	cp etc/designate/rootwrap.conf.sample /etc/designate/rootwrap.conf && \
+	mkdir -p /opt/kolla
 
-RUN mkdir -p /opt/kolla
 COPY config-designate.sh /opt/kolla/config-designate.sh
