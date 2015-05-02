@@ -1,6 +1,6 @@
 #!/bin/bash
 ROOT=$(readlink -m $(readlink -f $0)/../../)
-
+MYSQL_HOST=172.16.1.91
 D_API=compose_designateapi_1
 D_CENTRAL=compose_designatecentral_1
 D_MDNS=compose_designatemdns_1
@@ -10,7 +10,7 @@ D_PM_D=compose_designatepoolmanagerbind9data_1
 echo Cleanup...
 docker rm -f $(docker ps -a|grep designate|cut -d ' ' -f1 )
 docker rmi $(docker images|grep designate|tr -s ' ' ','|cut -d, -f3)
-mysql -h 172.16.1.91 -uroot -pkolla -e 'drop database designate'
+mysql -h ${MYSQL_HOST} -uroot -pkolla -e 'drop database designate'
 
 if [ "$1" == "clean" ]
 then
