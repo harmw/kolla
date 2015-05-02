@@ -3,4 +3,5 @@ id=$(designate domain-create --name kollacloud.local. --ttl $((15*60)) --descrip
 designate record-create --name welcome.kollacloud.local. --type TXT --data "Kolla rules the cloud!" $id
 designate record-create --name localhost.kollacloud.local. --type A --data 127.0.0.1 $id
 
+sleep 2
 host localhost.kollacloud.local. 172.16.1.91 
