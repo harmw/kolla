@@ -1,6 +1,10 @@
 FROM %%KOLLA_NAMESPACE%%/%%KOLLA_PREFIX%%designate-base:%%KOLLA_TAG%%
 MAINTAINER Kolla Project (https://launchpad.net/kolla)
 
-ADD ./start.sh /start.sh
+RUN yum install -y bind && \
+	yum clean all && \
+	cp -pr /var/named /opt/kolla/var-named
+
+ADD start.sh /start.sh
 
 CMD ["/start.sh"]

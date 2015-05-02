@@ -4,15 +4,22 @@ set -e
 . /opt/kolla/kolla-common.sh
 . /opt/kolla/config-designate.sh
 
+check_required_vars PUBLIC_IP
+
 MASTERNS=${PUBLIC_IP}
 MEMCACHED_HOST=127.0.0.1
+DESIGNATE_DNS_BACKEND=127.0.0.1
 
 CONF=/etc/designate/designate.conf
 
-# Hardcoded id's for the default pool.
+# TODO: read the rndc key from some variable so it's portable between different
+# containers.
+
+# Hardcoded random id's for the default pool since upstream doesn't yet support
+# otherwise.
 POOLID=794ccc2c-d751-44fe-b57f-8894c9f5c842
-NSS=12d8dbb9-5744-49f2-b536-f4950387ae9d
 TARGETS=f26e0b32-736f-4f0a-831b-039a415c481d
+NSS=12d8dbb9-5744-49f2-b536-f4950387ae9d
 
 crudini --set $CONF service:pool_manager workers 2
 crudini --set $CONF service:pool_manager enable_recovery_timer false
@@ -30,7 +37,7 @@ crudini --set $CONF pool:$POOLID nameservers $NSS
 crudini --set $CONF pool:$POOLID targets $TARGETS
 
 crudini --set $CONF pool_target:$TARGETS type bind9
-crudini --set $CONF pool_target:$TARGETS options "rndc_host: 127.0.0.1, rndc_key: /etc/rndc.key, rndc_conf_path: /etc/rndc.conf"
+crudini --set $CONF pool_target:$TARGETS options "rndc_host: ${DESIGNATE_DNS_BACKEND}, rndc_key: /etc/rndc.key, rndc_conf_path: /etc/rndc.conf"
 crudini --set $CONF pool_target:$TARGETS masters ${MASTERNS}:5354
 
 crudini --set $CONF pool_nameserver:$NSS host ${MASTERNS}

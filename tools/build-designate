@@ -18,12 +18,12 @@ then
 fi
 
 echo Building...
-sh ${ROOT}/docker/designate/designate-base/build
-sh ${ROOT}/docker/designate/designate-api/build
-sh ${ROOT}/docker/designate/designate-central/build
-sh ${ROOT}/docker/designate/designate-mdns/build
-sh ${ROOT}/docker/designate/designate-poolmanager-bind9/build
-sh ${ROOT}/docker/designate/designate-poolmanager-bind9-data/build
+sh ${ROOT}/docker/designate/designate-base/build --release
+sh ${ROOT}/docker/designate/designate-api/build --release
+sh ${ROOT}/docker/designate/designate-central/build --release
+sh ${ROOT}/docker/designate/designate-mdns/build --release
+sh ${ROOT}/docker/designate/designate-poolmanager-bind9/build --release
+sh ${ROOT}/docker/designate/designate-poolmanager-bind9-data/build --release
 
 echo Run...
 docker-compose -f ${ROOT}/compose/designate.yml up -d
