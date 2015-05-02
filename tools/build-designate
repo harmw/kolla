@@ -1,4 +1,6 @@
 #!/bin/bash
+ROOT=$(readlink -m $(readlink -f $0)/../../)
+
 D_API=compose_designateapi_1
 D_CENTRAL=compose_designatecentral_1
 D_MDNS=compose_designatemdns_1
@@ -16,15 +18,15 @@ then
 fi
 
 echo Building...
-sh designate-base/build
-sh designate-api/build
-sh designate-central/build
-sh designate-mdns/build
-sh designate-poolmanager-bind9/build
-sh designate-poolmanager-bind9-data/build
+sh ${ROOT}/docker/designate/designate-base/build
+sh ${ROOT}/docker/designate/designate-api/build
+sh ${ROOT}/docker/designate/designate-central/build
+sh ${ROOT}/docker/designate/designate-mdns/build
+sh ${ROOT}/docker/designate/designate-poolmanager-bind9/build
+sh ${ROOT}/docker/designate/designate-poolmanager-bind9-data/build
 
 echo Run...
-docker-compose -f ../../compose/designate.yml up -d
+docker-compose -f ${ROOT}/compose/designate.yml up -d
 
 echo Wait...
 for c in $D_API $D_CENTRAL $D_MDNS $D_PM $D_PM_D
