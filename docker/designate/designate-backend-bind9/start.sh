@@ -22,7 +22,7 @@ sed -i -r "/listen-on port 53 \{ 127.0.0.1; \};/d" $NAMEDCFG
 #sed -i -r "s/(listen-on-v6 port 53 \{) any(; \};)/\1 :: \2/" $NAMEDCFG
 sed -i -r "s,/\* Path to ISC DLV key \*/,allow-new-zones yes;," $NAMEDCFG
 sed -i -r "/allow-query .+;/d" $NAMEDCFG
-	
+
 cat > /etc/rndc.conf <<EOF
 options {
 	default-key "rndc-key";
